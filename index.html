@@ -66,7 +66,7 @@
   const commentInputElement = document.getElementById('comment-input');
   const buttonElement = document.getElementById('write-button');
   const commentsElement = document.getElementById('comments');
-  const commentElement = document.querySelectorAll('.comment');
+  
   const addFormElement = document.querySelector('.add-form');
 
 
@@ -101,7 +101,8 @@
       let likesCounts = likeCommentButtonElement.dataset.likeCounts;
       const index = likeCommentButtonElement.dataset.index;
 
-      likeCommentButtonElement.addEventListener("click", () => {
+      likeCommentButtonElement.addEventListener("click", (event) => {
+        event.stopPropagation();
         if (!comments[index].isLiked) {
           likesCounts++;
           comments[index].likes = likesCounts;
@@ -117,6 +118,22 @@
     }
   };
   initLikeCommentListeners();
+
+  //reply function
+
+  const initReplyToComment = () => {
+    const commentElements = document.querySelectorAll('.comment');
+   commentElements.forEach((comment, index) => {
+    comment.addEventListener("click", () => {
+      commentInputElement.value = `${comments[index].name}: \n ${comments[index].text}`
+      });
+   });
+      
+    }
+      
+    initReplyToComment();
+
+
 
   //render function
 
@@ -140,10 +157,11 @@
         </div>
       </li> `;
     })
-    .join("");
+      .join("");
 
     commentsElement.innerHTML = commentsHtml;
     initLikeCommentListeners();
+    initReplyToComment();
   };
   renderComments();
 
@@ -193,17 +211,24 @@
 
   });
 
-  //обновляю список комментариев(+новые)
+  //обновляю список комментариев(+новые) с предотвращением уязвимости
 
   buttonElement.addEventListener("click", () => {
     const oldCommentsHtml = commentsElement.innerHTML;
 
     comments.push({
-      name: nameInputElement.value,
+      name: nameInputElement.value
+      .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;"),
       date: getCurrentDate(),
-      text: commentInputElement.value,
+      text: commentInputElement.value
+      .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;"),
       likes: 0,
       isLiked: false,
+        
     });
 
     renderComments();
@@ -211,6 +236,9 @@
     nameInputElement.value = "";
     commentInputElement.value = "";
   });
+
+  
+
 
   console.log("It works!");
 </script>
