@@ -55,14 +55,20 @@
     </div>
   </div>
 </body>
-
+<style>
+  .error{
+    background-color: #ff2600;
+  }
+</style>
 <script>
   "use strict";
   const nameInputElement = document.getElementById('name-input');
   const commentInputElement = document.getElementById('comment-input');
   const buttonElement = document.getElementById('write-button');
   const commentsElement = document.getElementById('comments');
+  const addFormElement = document.querySelector('.add-form');
 
+  //получаю дату
   const getCurrentDate = () => {
     const currentDate = new Date();
     let date = currentDate.getDate();
@@ -87,11 +93,11 @@
     }
     return `${date}.${month}.${year} ${hour}:${minutes}`;
   }
-  
+  //Делаю кнопку недоступной, если поля пустые
   buttonElement.disabled = true;
 
 nameInputElement.addEventListener("input", () => {
-  if (nameInputElement.value.length > 0) {
+  if (nameInputElement.value.trim().length != 0) {
     return (buttonElement.disabled = false);
   } else {
     return (buttonElement.disabled = true);
@@ -99,7 +105,7 @@ nameInputElement.addEventListener("input", () => {
 });
 
 commentInputElement.addEventListener("input", () => {
-  if (commentInputElement.value.length > 0) {
+  if (commentInputElement.value.trim().length != 0) {
     return (buttonElement.disabled = false);
   } else {
     return (buttonElement.disabled = true);
@@ -107,6 +113,7 @@ commentInputElement.addEventListener("input", () => {
   
 });
 
+//обновляю список комментариев(+новые)
 buttonElement.addEventListener("click", () => {
   const oldCommentsHtml = commentsElement.innerHTML;
       commentsElement.innerHTML = oldCommentsHtml + `<li class="comment">
@@ -122,15 +129,14 @@ buttonElement.addEventListener("click", () => {
         <div class="comment-footer">
           <div class="likes">
             <span class="likes-counter">0</span>
-            <button class="like-button -active-like"></button>
+            <button class="like-button"></button>
           </div>
         </div>
       </li> `
-})
 
-      
-  
-
+      nameInputElement.value = "";
+      commentInputElement.value = "";
+});
 
 
 
