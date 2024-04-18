@@ -66,30 +66,13 @@
   const commentInputElement = document.getElementById('comment-input');
   const buttonElement = document.getElementById('write-button');
   const commentsElement = document.getElementById('comments');
-  
+
   const addFormElement = document.querySelector('.add-form');
 
 
   //users list
 
-  let comments = [
-    {
-      name: "Глеб Фокин",
-      date: "12.02.22 12:18",
-      text: "Это будет первый комментарий на этой странице",
-      likes: 3,
-      isLiked: false,
-
-    },
-    {
-      name: "Варвара Н.",
-      date: "13.02.22 19:22",
-      text: "Мне нравится как оформлена эта страница! ❤",
-      likes: 75,
-      isLiked: true,
-
-    },
-  ];
+  let comments = [];
 
   //add like function
 
@@ -123,15 +106,15 @@
 
   const initReplyToComment = () => {
     const commentElements = document.querySelectorAll('.comment');
-   commentElements.forEach((comment, index) => {
-    comment.addEventListener("click", () => {
-      commentInputElement.value = `${comments[index].name}: \n ${comments[index].text}`
+    commentElements.forEach((comment, index) => {
+      comment.addEventListener("click", () => {
+        commentInputElement.value = `${comments[index].name}: \n ${comments[index].text}`
       });
-   });
-      
-    }
-      
-    initReplyToComment();
+    });
+
+  }
+
+  initReplyToComment();
 
 
 
@@ -218,19 +201,19 @@
 
     comments.push({
       name: nameInputElement.value
-      .replaceAll("<", "&lt;")
+        .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;"),
       date: getCurrentDate(),
       text: commentInputElement.value
-      .replaceAll("<", "&lt;")
+        .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;"),
       likes: 0,
       isLiked: false,
-        
-    });
 
+    });
+    postCommentInfo();
     renderComments();
 
     nameInputElement.value = "";
@@ -238,38 +221,60 @@
   });
 
   //подключение комментариев api
-  fetch("https://wedev-api.sky.pro/api/v1/:ibragimova-karina/comments", {
-    method: "GET"
-  }).then((response) => {
-    response.json().then((responseData) => {
-      const appComments = responseData.comments.map((comment) => {
-return {
-  name: comment.author.name,
-  date: new Date(comment.date),
-  text: comment.text,
-  likes: comment.likes,
-  isLiked: false,
-};
+  function getCommentsInfo() {
+    return fetch("https://wedev-api.sky.pro/api/v1/karina-ibragimova2/comments", {
+      method: "GET"
+    }).then((response) => {
+      return response.json();
+    }).then((responseData) => {
+        const appComments = responseData.comments.map((comment) => {
+          const formatDate = (apiDate) => {
+              const date = new Date(apiDate);
+              const options = {
+                day: "2-digit",
+                month: "2-digit",
+                year: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+              };
+              return date.toLocaleString("ru", options).replace(",", "");
+            };
+
+            const apiDate = comment.date;
+            const formattedDate = formatDate(apiDate);
+
+          return {
+            name: comment.author.name,
+            date: formattedDate,
+            text: comment.text,
+            likes: comment.likes,
+            isLiked: false,
+          };
+        });
+        comments = appComments;
+        renderComments();
       });
-      comments = appComments;
-      renderComments();
-    });
-  });
+  };
+
+ getCommentsInfo();
 
   //добавление новых комментариев api
-//   fetch("https://wedev-api.sky.pro/api/v1/:ibragimova-karina/comments", {
-//     method:"POST",
-//     body: JSON.stringify({
-//       text: commentInputElement,
-//       name:nameInputElement,
-//     }),
-//   }).then((response) => {
-//     response.json().then((responseData) => {
-// //comments = responseData.
-// renderComments();
-//     })
-//   })
-
+  function postCommentInfo() {
+    return fetch(
+      "https://wedev-api.sky.pro/api/v1/karina-ibragimova2/comments", 
+      {
+      method: "POST",
+      body: JSON.stringify({
+        text: commentInputElement.value,
+        name: nameInputElement.value,
+      }),
+    }).then((response) => {
+      return response.json();
+    })
+    .then((responseData) => {
+        getCommentsInfo();
+      });
+  };
 
   console.log("It works!");
 </script>
