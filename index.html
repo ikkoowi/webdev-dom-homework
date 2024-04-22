@@ -116,8 +116,6 @@
 
   initReplyToComment();
 
-
-
   //render function
 
   const renderComments = () => {
@@ -191,28 +189,14 @@
     } else {
       return (buttonElement.disabled = true);
     }
-
   });
 
-  //обновляю список комментариев(+новые) с предотвращением уязвимости
+  
+
+  //обновляю список комментариев(+новые) 
 
   buttonElement.addEventListener("click", () => {
     const oldCommentsHtml = commentsElement.innerHTML;
-
-    comments.push({
-      name: nameInputElement.value
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;"),
-      date: getCurrentDate(),
-      text: commentInputElement.value
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;"),
-      likes: 0,
-      isLiked: false,
-
-    });
     postCommentInfo();
     renderComments();
 
@@ -227,51 +211,60 @@
     }).then((response) => {
       return response.json();
     }).then((responseData) => {
-        const appComments = responseData.comments.map((comment) => {
-          const formatDate = (apiDate) => {
-              const date = new Date(apiDate);
-              const options = {
-                day: "2-digit",
-                month: "2-digit",
-                year: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-              };
-              return date.toLocaleString("ru", options).replace(",", "");
-            };
-
-            const apiDate = comment.date;
-            const formattedDate = formatDate(apiDate);
-
-          return {
-            name: comment.author.name,
-            date: formattedDate,
-            text: comment.text,
-            likes: comment.likes,
-            isLiked: false,
+      const appComments = responseData.comments.map((comment) => {
+        const formatDate = (apiDate) => {
+          const date = new Date(apiDate);
+          const options = {
+            day: "2-digit",
+            month: "2-digit",
+            year: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
           };
-        });
-        comments = appComments;
-        renderComments();
+          return date.toLocaleString("ru", options).replace(",", "");
+        };
+
+        const apiDate = comment.date;
+        const formattedDate = formatDate(apiDate);
+
+        return {
+          name: comment.author.name,
+          date: formattedDate,
+          text: comment.text,
+          likes: comment.likes,
+          isLiked: false,
+        };
       });
+      comments = appComments;
+      renderComments();
+    });
   };
 
- getCommentsInfo();
+  getCommentsInfo();
 
   //добавление новых комментариев api
   function postCommentInfo() {
     return fetch(
-      "https://wedev-api.sky.pro/api/v1/karina-ibragimova2/comments", 
+      "https://wedev-api.sky.pro/api/v1/karina-ibragimova2/comments",
       {
-      method: "POST",
-      body: JSON.stringify({
-        text: commentInputElement.value,
-        name: nameInputElement.value,
-      }),
-    }).then((response) => {
-      return response.json();
-    })
-    .then((responseData) => {
+        method: "POST",
+        body: JSON.stringify({
+          text: commentInputElement.value
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;"),
+          name: nameInputElement.value
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;"),
+          date: getCurrentDate(),
+          likes: 0,
+          isLiked: false,
+        }),
+      }).then((response) => {
+        return response.json();
+      })
+      .then((responseData) => {
         getCommentsInfo();
       });
   };
