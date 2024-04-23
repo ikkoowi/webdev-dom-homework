@@ -191,7 +191,7 @@
     }
   });
 
-  
+
 
   //обновляю список комментариев(+новые) 
 
@@ -204,13 +204,17 @@
     commentInputElement.value = "";
   });
 
+
+
   //подключение комментариев api
   function getCommentsInfo() {
+    const commentsElementNew = commentsElement.textContent = 'Подождите пожалуйста, комментарии загружаются...';
     return fetch("https://wedev-api.sky.pro/api/v1/karina-ibragimova2/comments", {
       method: "GET"
     }).then((response) => {
       return response.json();
     }).then((responseData) => {
+      commentsElement.textContent;
       const appComments = responseData.comments.map((comment) => {
         const formatDate = (apiDate) => {
           const date = new Date(apiDate);
@@ -235,6 +239,7 @@
           isLiked: false,
         };
       });
+
       comments = appComments;
       renderComments();
     });
@@ -242,8 +247,13 @@
 
   getCommentsInfo();
 
+  
   //добавление новых комментариев api
+
+
+
   function postCommentInfo() {
+    const addFormElementNew = addFormElement.textContent = 'Комментарий добавляется...';
     return fetch(
       "https://wedev-api.sky.pro/api/v1/karina-ibragimova2/comments",
       {
@@ -265,8 +275,10 @@
         return response.json();
       })
       .then((responseData) => {
-        getCommentsInfo();
+        getCommentsInfo();    
+        addFormElement.textContent;
       });
+    
   };
 
   console.log("It works!!!");
