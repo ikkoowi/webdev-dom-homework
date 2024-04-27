@@ -192,16 +192,7 @@
     }
   });
 
-  //обновляю список комментариев(+новые) 
-  buttonElement.addEventListener("click", () => {
-    const oldCommentsHtml = commentsElement.innerHTML;
-    
-    postCommentInfo();
-    renderComments();
-
-    nameInputElement.value = "";
-    commentInputElement.value = "";
-  });
+  
 
   //подключение комментариев api
   function getCommentsInfo() {
@@ -239,7 +230,14 @@
 
       comments = appComments;
       renderComments();
-    });
+    })
+    .catch((error) => {
+      if (error.message === "Failed to fetch") {
+        alert("Кажется, у вас сломался интернет, попробуйте позже");
+      } else {
+        alert(error);
+      }
+    })
   };
   const commentsElementNew = commentsElement.textContent = 'Подождите пожалуйста, комментарии загружаются...'
   getCommentsInfo();
@@ -267,12 +265,45 @@
           isLiked: false,
         }),
       }).then((response) => {
-        return response.json();
+        
+        if (response.status === 400) {
+          throw new Error('Что-то пошло не так');
+        }
+        else if (response.status === 500) {
+          throw new Error('Сервер упал');
+        }
+        else {
+          return response.json();
+        }
+        
       })
       .then((responseData) => {
-        getCommentsInfo();
-      });
+        return getCommentsInfo();
+        
+          nameInputElement.value = '';
+        commentInputElement.value = '';
+        
+        
+      })
+      .catch((error) => {
+      if (error.message === "Failed to fetch") {
+        alert("Кажется, у вас сломался интернет, попробуйте позже");
+      } else {
+        alert('Кажется, что-то пошло не так');
+      }
+    });
   };
+
+  //обновляю список комментариев(+новые) 
+  buttonElement.addEventListener("click", () => {
+    const oldCommentsHtml = commentsElement.innerHTML;
+    
+    postCommentInfo();
+    renderComments();
+
+    nameInputElement.value = "";
+    commentInputElement.value = "";
+  });
 
   console.log("It works!!!");
 </script>
