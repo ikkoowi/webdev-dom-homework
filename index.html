@@ -267,11 +267,14 @@
           isLiked: false,
         }),
       }).then((response) => {
+       
         return response.json();
       })
       .then((responseData) => {
+        const addFormElementNew = addFormElement.textContent = 'Комментарий отправляется...';
         getCommentsInfo();
       });
+    
   };
 
   console.log("It works!!!");
