@@ -234,10 +234,12 @@
     .catch((error) => {
       if (error.message === "Failed to fetch") {
         alert("Кажется, у вас сломался интернет, попробуйте позже");
-      } else {
-        alert(error);
+      } else if (error.status === 400){
+        alert("Неправильно введен текст");
+      } else if (error.status === 500) {
+        alert("Сервер упал");
       }
-    })
+    });
   };
   const commentsElementNew = commentsElement.textContent = 'Подождите пожалуйста, комментарии загружаются...'
   getCommentsInfo();
@@ -278,12 +280,10 @@
         
       })
       .then((responseData) => {
-        return getCommentsInfo();
-        
-          nameInputElement.value = '';
+        nameInputElement.value = '';
         commentInputElement.value = '';
-        
-        
+
+        return getCommentsInfo();
       })
       .catch((error) => {
       if (error.message === "Failed to fetch") {
@@ -300,9 +300,6 @@
     
     postCommentInfo();
     renderComments();
-
-    nameInputElement.value = "";
-    commentInputElement.value = "";
   });
 
   console.log("It works!!!");
