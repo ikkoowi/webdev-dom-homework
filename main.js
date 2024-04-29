@@ -11,6 +11,16 @@ const addFormElement = document.querySelector('.add-form');
 //users list
 let comments = [];
 
+
+
+//add like function
+ 
+
+//reply function
+
+
+
+
 //подключение комментариев api
 function getCommentsInfo() {
 
@@ -42,7 +52,7 @@ function getCommentsInfo() {
     });
 
     comments = appComments;
-    renderCommentsFunc({comments});
+    renderCommentsFunc({ comments });
   })
     .catch((error) => {
       if (error.message === "Failed to fetch") {
@@ -66,10 +76,38 @@ function postCommentInfo() {
     .catch((error) => {
       if (error.message === "Failed to fetch") {
         alert("Кажется, у вас сломался интернет, попробуйте позже");
-      } else if (error.status === 400){
+      } else if (error.status === 400) {
         alert('Неправильно введен текст');
-      } else if(error.status === 500) {
+      } else if (error.status === 500) {
         alert("Сервер упал");
       }
     });
 };
+
+//обновляю список комментариев(+новые) 
+buttonElement.addEventListener("click", () => {
+  const oldCommentsHtml = commentsElement.innerHTML;
+
+  postCommentInfo();
+  renderCommentsFunc({ comments });
+
+});
+
+//Делаю кнопку недоступной, если поля пустые
+buttonElement.disabled = true;
+
+nameInputElement.addEventListener("input", () => {
+  if (nameInputElement.value.trim().length != 0) {
+    return (buttonElement.disabled = false);
+  } else {
+    return (buttonElement.disabled = true);
+  }
+});
+
+commentInputElement.addEventListener("input", () => {
+  if (commentInputElement.value.trim().length != 0) {
+    return (buttonElement.disabled = false);
+  } else {
+    return (buttonElement.disabled = true);
+  }
+});

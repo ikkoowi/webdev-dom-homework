@@ -1,4 +1,36 @@
-import { initLikeCommentListenersFunc, initReplyToCommentFunc } from "./initFunctions.js";
+function initLikeCommentListeners() {
+  const likeCommentButtonsElements = document.querySelectorAll(".like-button");
+
+  for (const likeCommentButtonElement of likeCommentButtonsElements) {
+
+    let likesCounts = likeCommentButtonElement.dataset.likeCounts;
+    const index = likeCommentButtonElement.dataset.index;
+
+    likeCommentButtonElement.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (!comments[index].isLiked) {
+        likesCounts++;
+        comments[index].likes = likesCounts;
+        comments[index].isLiked = true;
+      }
+      else {
+        likesCounts--;
+        comments[index].likes = likesCounts;
+        comments[index].isLiked = false;
+      }
+      renderCommentsFunc({ comments });
+    });
+  }
+};
+
+function initReplyToComment() {
+  const commentElements = document.querySelectorAll('.comment');
+  commentElements.forEach((comment, index) => {
+    comment.addEventListener("click", () => {
+      commentInputElement.value = `${comments[index].name}: \n ${comments[index].text}`
+    });
+  });
+};
 
 export function renderCommentsFunc({ comments }) {
     const commentsElement = document.getElementById('comments');
@@ -24,7 +56,9 @@ export function renderCommentsFunc({ comments }) {
     })
         .join("");
 
+       
+
     commentsElement.innerHTML = commentsHtml;
-    initLikeCommentListenersFunc({comments});
-    initReplyToCommentFunc({comments});
+    initLikeCommentListeners();
+    initReplyToComment();
 };
