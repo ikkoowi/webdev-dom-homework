@@ -1,6 +1,6 @@
-import { initLikeCommentListeners, initReplyToComment } from "./initFunctions.js";
+import { initLikeCommentListenersFunc, initReplyToCommentFunc } from "./initFunctions.js";
 
-export function renderComments({ comments }) {
+export function renderCommentsFunc({ comments }) {
     const commentsElement = document.getElementById('comments');
 
     const commentsHtml = comments.map((comment, index) => {
@@ -25,6 +25,6 @@ export function renderComments({ comments }) {
         .join("");
 
     commentsElement.innerHTML = commentsHtml;
-    initLikeCommentListeners();
-    initReplyToComment();
+    initLikeCommentListenersFunc({comments});
+    initReplyToCommentFunc({comments});
 };

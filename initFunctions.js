@@ -1,7 +1,7 @@
- import { renderComments } from "./render";
+ import { renderCommentsFunc } from "./render";
  
  //add like function
- export function initLikeCommentListeners({comments}) {
+ export function initLikeCommentListenersFunc({comments}) {
     const likeCommentButtonsElements = document.querySelectorAll(".like-button");
 
     for (const likeCommentButtonElement of likeCommentButtonsElements) {
@@ -21,14 +21,14 @@
           comments[index].likes = likesCounts;
           comments[index].isLiked = false;
         }
-        renderComments({comments});
+        renderCommentsFunc({comments});
       });
     }
   };
 
   //reply function
 
- export function initReplyToComment({comments}) {
+ export function initReplyToCommentFunc({comments}) {
     const commentElements = document.querySelectorAll('.comment');
     commentElements.forEach((comment, index) => {
       comment.addEventListener("click", () => {
@@ -42,10 +42,8 @@
     const oldCommentsHtml = commentsElement.innerHTML;
     
     postCommentInfo();
-    renderComments();
+    renderCommentsFunc({comments});
 
-    nameInputElement.value = "";
-    commentInputElement.value = "";
   });
 
   //Делаю кнопку недоступной, если поля пустые
