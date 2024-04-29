@@ -171,7 +171,8 @@
       minutes = "0" + minutes;
     }
     return `${date}.${month}.${year} ${hour}:${minutes}`;
-  }
+  };
+
   //Делаю кнопку недоступной, если поля пустые
   buttonElement.disabled = true;
 
@@ -193,24 +194,15 @@
 
   
 
-  //обновляю список комментариев(+новые) 
-
-  buttonElement.addEventListener("click", () => {
-    const oldCommentsHtml = commentsElement.innerHTML;
-    postCommentInfo();
-    renderComments();
-
-    nameInputElement.value = "";
-    commentInputElement.value = "";
-  });
-
   //подключение комментариев api
   function getCommentsInfo() {
+
     return fetch("https://wedev-api.sky.pro/api/v1/karina-ibragimova2/comments", {
       method: "GET"
     }).then((response) => {
       return response.json();
     }).then((responseData) => {
+
       const appComments = responseData.comments.map((comment) => {
         const formatDate = (apiDate) => {
           const date = new Date(apiDate);
@@ -235,15 +227,28 @@
           isLiked: false,
         };
       });
+
       comments = appComments;
       renderComments();
+    })
+    .catch((error) => {
+      if (error.message === "Failed to fetch") {
+        alert("Кажется, у вас сломался интернет, попробуйте позже");
+      } else if (error.status === 400){
+        alert("Неправильно введен текст");
+      } else if (error.status === 500) {
+        alert("Сервер упал");
+      }
     });
   };
-
+  const commentsElementNew = commentsElement.textContent = 'Подождите пожалуйста, комментарии загружаются...'
   getCommentsInfo();
+
+
 
   //добавление новых комментариев api
   function postCommentInfo() {
+    
     return fetch(
       "https://wedev-api.sky.pro/api/v1/karina-ibragimova2/comments",
       {
@@ -262,12 +267,40 @@
           isLiked: false,
         }),
       }).then((response) => {
-        return response.json();
+        
+        if (response.status === 400) {
+          throw new Error('Что-то пошло не так');
+        }
+        else if (response.status === 500) {
+          throw new Error('Сервер упал');
+        }
+        else {
+          return response.json();
+        }
+        
       })
       .then((responseData) => {
-        getCommentsInfo();
-      });
+        nameInputElement.value = '';
+        commentInputElement.value = '';
+
+        return getCommentsInfo();
+      })
+      .catch((error) => {
+      if (error.message === "Failed to fetch") {
+        alert("Кажется, у вас сломался интернет, попробуйте позже");
+      } else {
+        alert('Кажется, что-то пошло не так');
+      }
+    });
   };
+
+  //обновляю список комментариев(+новые) 
+  buttonElement.addEventListener("click", () => {
+    const oldCommentsHtml = commentsElement.innerHTML;
+    
+    postCommentInfo();
+    renderComments();
+  });
 
   console.log("It works!!!");
 </script>
