@@ -1,5 +1,5 @@
 import { getComments, postComment } from "./api.js";
-import { renderCommentsFunc } from "./render.js";
+import { renderComments } from "./render.js";
 
 "use strict";
 const nameInputElement = document.getElementById('name-input');
@@ -10,16 +10,6 @@ const addFormElement = document.querySelector('.add-form');
 
 //users list
 let comments = [];
-
-
-
-//add like function
- 
-
-//reply function
-
-
-
 
 //подключение комментариев api
 function getCommentsInfo() {
@@ -52,7 +42,7 @@ function getCommentsInfo() {
     });
 
     comments = appComments;
-    renderCommentsFunc({ comments });
+    renderComments({ comments });
   })
     .catch((error) => {
       if (error.message === "Failed to fetch") {
@@ -89,7 +79,7 @@ buttonElement.addEventListener("click", () => {
   const oldCommentsHtml = commentsElement.innerHTML;
 
   postCommentInfo();
-  renderCommentsFunc({ comments });
+  renderComments({ comments });
 
 });
 

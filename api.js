@@ -20,9 +20,9 @@ export function postComment({commentInputElement, nameInputElement}) {
                     .replaceAll("<", "&lt;")
                     .replaceAll(">", "&gt;")
                     .replaceAll('"', "&quot;"),
-                date: getCurrentDate(),
-                likes: 0,
-                isLiked: false,
+                // date: getCurrentDate(),
+                // likes: 0,
+                // isLiked: false,
             }),
         }).then((response) => {
             if (response.status === 400) {
