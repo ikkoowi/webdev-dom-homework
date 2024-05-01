@@ -4,7 +4,6 @@ import { renderComments } from "./render.js";
 "use strict";
 const nameInputElement = document.getElementById('name-input');
 const commentInputElement = document.getElementById('comment-input');
-const buttonElement = document.getElementById('write-button');
 const commentsElement = document.getElementById('comments');
 const addFormElement = document.querySelector('.add-form');
 
@@ -52,6 +51,7 @@ function getCommentsInfo() {
       }
     })
 };
+
 const commentsElementNew = commentsElement.textContent = 'Подождите пожалуйста, комментарии загружаются...'
 getCommentsInfo();
 
@@ -73,31 +73,3 @@ function postCommentInfo() {
       }
     });
 };
-
-//обновляю список комментариев(+новые) 
-buttonElement.addEventListener("click", () => {
-  const oldCommentsHtml = commentsElement.innerHTML;
-
-  postCommentInfo();
-  renderComments({ comments });
-
-});
-
-//Делаю кнопку недоступной, если поля пустые
-buttonElement.disabled = true;
-
-nameInputElement.addEventListener("input", () => {
-  if (nameInputElement.value.trim().length != 0) {
-    return (buttonElement.disabled = false);
-  } else {
-    return (buttonElement.disabled = true);
-  }
-});
-
-commentInputElement.addEventListener("input", () => {
-  if (commentInputElement.value.trim().length != 0) {
-    return (buttonElement.disabled = false);
-  } else {
-    return (buttonElement.disabled = true);
-  }
-});

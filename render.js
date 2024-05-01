@@ -1,3 +1,5 @@
+let comments = [];
+
 export const renderComments = ({ comments }) => {
   const commentsElement = document.getElementById('comments');
 
@@ -25,11 +27,11 @@ export const renderComments = ({ comments }) => {
      
 
   commentsElement.innerHTML = commentsHtml;
-  initLikeCommentListeners();
-  initReplyToComment();
+  initLikeCommentListeners({comments});
+  initReplyToComment({comments});
 };
 
-function initLikeCommentListeners() {
+function initLikeCommentListeners({comments}) {
   const likeCommentButtonsElements = document.querySelectorAll(".like-button");
 
   for (const likeCommentButtonElement of likeCommentButtonsElements) {
@@ -57,7 +59,7 @@ function initLikeCommentListeners() {
 const commentInputElement = document.getElementById('comment-input');
 
 
-function initReplyToComment() {
+function initReplyToComment({comments}) {
   const commentElements = document.querySelectorAll('.comment');
   commentElements.forEach((comment, index) => {
     comment.addEventListener("click", () => {
