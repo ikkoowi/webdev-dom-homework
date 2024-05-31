@@ -1,4 +1,4 @@
-let comments = [];
+import { postCommentInfo } from "./postCommentInfo.js";
 
 export const renderComments = ({ comments }) => {
   const commentsElement = document.getElementById('comments');
@@ -26,7 +26,8 @@ export const renderComments = ({ comments }) => {
 
      
 
-  commentsElement.innerHTML = commentsHtml;
+  commentsElement.innerHTML = commentsHtml; 
+  //todo
   initLikeCommentListeners({comments});
   initReplyToComment({comments});
 };

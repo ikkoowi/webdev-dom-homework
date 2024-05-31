@@ -1,23 +1,9 @@
-import { renderComments } from "./render.js";
-import { postCommentInfo } from "./main.js";
+export function checkEmptyFields() {
+    const nameInputElement = document.getElementById('name-input');
+    const commentInputElement = document.getElementById('comment-input');
+    const buttonElement = document.getElementById('write-button');
 
-const buttonElement = document.getElementById('write-button');
-let comments = [];
-const nameInputElement = document.getElementById('name-input');
-const commentInputElement = document.getElementById('comment-input');
-const commentsElement = document.getElementById('comments');
-
-//обновляю список комментариев(+новые) 
-buttonElement.addEvent("click", () => {
-    const oldCommentsHtml = commentsElement.innerHTML;
-
-    postCommentInfo();
-    renderComments({ comments });
-
-});
-
-//Делаю кнопку недоступной, если поля пустые
-buttonElement.disabled = true;
+    buttonElement.disabled = true;
 
 nameInputElement.addEventListener("input", () => {
     if (nameInputElement.value.trim().length != 0) {
@@ -34,3 +20,4 @@ commentInputElement.addEventListener("input", () => {
         return (buttonElement.disabled = true);
     }
 });
+};
