@@ -45,6 +45,7 @@
         </div>
       </li> -->
     </ul>
+    <div class="add-form-loader"></div>
     <div class="add-form">
       <input type="text" class="add-form-name" placeholder="Введите ваше имя" id="name-input" />
       <textarea type="textarea" class="add-form-text" placeholder="Введите ваш коментарий" rows="4"
@@ -171,7 +172,8 @@
       minutes = "0" + minutes;
     }
     return `${date}.${month}.${year} ${hour}:${minutes}`;
-  }
+  };
+
   //Делаю кнопку недоступной, если поля пустые
   buttonElement.disabled = true;
 
@@ -191,12 +193,10 @@
     }
   });
 
-  
-
   //обновляю список комментариев(+новые) 
-
   buttonElement.addEventListener("click", () => {
     const oldCommentsHtml = commentsElement.innerHTML;
+
     postCommentInfo();
     renderComments();
 
@@ -206,11 +206,13 @@
 
   //подключение комментариев api
   function getCommentsInfo() {
+
     return fetch("https://wedev-api.sky.pro/api/v1/karina-ibragimova2/comments", {
       method: "GET"
     }).then((response) => {
       return response.json();
     }).then((responseData) => {
+
       const appComments = responseData.comments.map((comment) => {
         const formatDate = (apiDate) => {
           const date = new Date(apiDate);
@@ -235,15 +237,20 @@
           isLiked: false,
         };
       });
+
       comments = appComments;
       renderComments();
     });
   };
-
+  const commentsElementNew = commentsElement.textContent = 'Подождите пожалуйста, комментарии загружаются...'
   getCommentsInfo();
+
+
 
   //добавление новых комментариев api
   function postCommentInfo() {
+    document.querySelector(".add-form-loader").textContent = "Комментарий отправляется...";
+    addFormElement.style.display = "none";
     return fetch(
       "https://wedev-api.sky.pro/api/v1/karina-ibragimova2/comments",
       {
@@ -262,11 +269,17 @@
           isLiked: false,
         }),
       }).then((response) => {
+
         return response.json();
       })
       .then((responseData) => {
+        
         getCommentsInfo();
-      });
+      }).
+      finally(() => {
+        document.querySelector(".add-form-loader").textContent = "";
+        addFormElement.style.display = "flex";
+      })
   };
 
   console.log("It works!!!");
