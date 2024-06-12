@@ -7,12 +7,9 @@ export function postCommentInfo() {
     const commentInputElement = document.getElementById('comment-input');
     const buttonElement = document.getElementById('write-button');
 
-checkEmptyFields();
-
-
     buttonElement.addEventListener("click", () => { 
-        
-        if (nameInputElement.value.trim() === "" || commentInputElement.value.trim() === "" ) {
+      checkEmptyFields();
+       if (nameInputElement.value.trim() === "" || commentInputElement.value.trim() === "" ) {
             buttonElement.disabled = true;
             return;
         }      
@@ -30,5 +27,4 @@ checkEmptyFields();
           }
         });
       });
-    
   };

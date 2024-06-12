@@ -1,10 +1,11 @@
+import { user } from "./main.js";
 import { postCommentInfo } from "./postCommentInfo.js";
 
 export const renderComments = ({ comments }) => {
   const commentsElement = document.getElementById('comments');
 
   const commentsHtml = comments.map((comment, index) => {
-      return `<li class="comment">
+    return `<li class="comment">
           <div class="comment-header">
             <div>${comment.name}</div>
             <div>${comment.date}</div>
@@ -22,17 +23,18 @@ export const renderComments = ({ comments }) => {
           </div>
         </li> `;
   })
-      .join("");
+    .join("");
 
-     
 
-  commentsElement.innerHTML = commentsHtml; 
-  //todo
-  initLikeCommentListeners({comments});
-  initReplyToComment({comments});
+
+  commentsElement.innerHTML = commentsHtml;
+  if (user) {
+    initLikeCommentListeners({ comments });
+    initReplyToComment({ comments });
+  };
 };
 
-function initLikeCommentListeners({comments}) {
+function initLikeCommentListeners({ comments }) {
   const likeCommentButtonsElements = document.querySelectorAll(".like-button");
 
   for (const likeCommentButtonElement of likeCommentButtonsElements) {
@@ -57,13 +59,12 @@ function initLikeCommentListeners({comments}) {
   }
 };
 
-const commentInputElement = document.getElementById('comment-input');
-
-
-function initReplyToComment({comments}) {
+function initReplyToComment({ comments }) {
   const commentElements = document.querySelectorAll('.comment');
+
   commentElements.forEach((comment, index) => {
     comment.addEventListener("click", () => {
+      const commentInputElement = document.getElementById('comment-input');
       commentInputElement.value = `${comments[index].name}: \n ${comments[index].text}`
     });
   });

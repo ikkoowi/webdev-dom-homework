@@ -4,7 +4,7 @@ import { renderComments } from "./render.js";
 
 export function getCommentsInfo(comments) {
 
-    getComments().then((responseData) => {
+    return getComments().then((responseData) => {
   
       const appComments = responseData.comments.map((comment) => {
         const formatDate = (apiDate) => {
